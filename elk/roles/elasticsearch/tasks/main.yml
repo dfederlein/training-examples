@@ -1,0 +1,23 @@
+---
+- name: get the elasticsearch package
+  get_url:
+    url: "{{elasticURL}}"
+    checksum: "{{elasticCheckSum}}"
+    dest: /tmp/
+
+- name: insatll elasticsearch
+  yum:
+    name: /tmp/elasticsearch-5.2.1.rpm
+    state: present
+
+- name: push out modified elasticsearch conf file
+  template:
+    src: elasticsearch.yml.j2
+    dest: /etc/elasticsearch/elasticsearch.yml
+  notify: restart elasticsearch
+
+- name: start elasticsearch
+  service:
+    name: elasticsearch
+    enabled: yes
+    state: started

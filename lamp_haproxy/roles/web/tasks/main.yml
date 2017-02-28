@@ -1,16 +1,27 @@
 ---
+- name: install git
+  yum: name=git state=present
 
-# httpd is handled by the base-apache role upstream
-- name: Install php and git 
-  yum: name={{ item }} state=present
-  with_items:
-   - php
-   - php-mysql
-   - git
+- name: checkout app
+  git: repo=https://github.com/jsmartin/lameapp.git dest=/var/www/lameapp version={{lameapp_version|string}}
 
-- name: Configure SELinux to allow httpd to connect to remote database
-  seboolean: name=httpd_can_network_connect_db state=true persistent=yes
-  when: sestatus.rc != 0
+- name: set permissions on app
+  file: name=/var/www/lameapp/lame.py mode=0755
 
-- name: Copy the code from repository
-  git: repo={{ repository }} version={{ webapp_version }} dest=/var/www/html/
+- name: add apache config file
+  copy: src=lameapp.conf dest={{sites_available}}
+  notify: restart apache
+
+- name: link app config
+  file: src={{sites_available}}/lameapp.conf dest={{sites_enabled}}/lameapp.conf state=link
+
+- meta: flush_handlers
+
+- name: check for proper response
+  uri: 
+    url: http://localhost/lame
+    return_content: yes
+  register: result
+  until: '"Hello Moon" in result.content'
+  retries: 10
+  delay: 1

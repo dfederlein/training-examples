@@ -1,0 +1,12 @@
+---
+- name: get java file
+  get_url:
+    url: "{{java_url}}"
+    dest: /tmp/
+    mode: 0444
+    headers: 'Cookie: oraclelicense=accept-securebackup-cookie'
+
+- name: install java 8
+  yum:
+    name: /tmp/jdk-8u112-linux-x64.rpm
+    state: present

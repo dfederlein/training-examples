@@ -1,0 +1,3 @@
+---
+kibanaServer: example.com
+kibanaPassword: superSecret

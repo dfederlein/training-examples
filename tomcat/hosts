@@ -1,0 +1,2 @@
+[tomcat-servers]
+10.42.0.6 ansible_user=vagrant

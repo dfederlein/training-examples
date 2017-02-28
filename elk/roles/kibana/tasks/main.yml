@@ -1,0 +1,17 @@
+---
+- name: get kibana rpm
+  get_url:
+    url: "{{kibanaURL}}"
+    checksum: "{{kibanaChecksum}}"
+    dest: /tmp/
+
+- name: install kibana
+  yum:
+    name: /tmp/kibana-5.2.1-x86_64.rpm
+    state: present
+
+- name: start kibana
+  service:
+    name: kibana
+    state: started
+    enabled: yes

@@ -10,8 +10,11 @@
 #
 iface: '{{ ansible_default_ipv4.interface }}'
 
-# this is the repository that holds our sample webapp
-repository: https://github.com/bennojoy/mywebapp.git
+apache_test_message: This is a test -
+apache_max_keep_alive_requests: 115
+apache_docroot: /var/www/html
+apache_config: /etc/httpd/conf/httpd.conf
+sites_available: /etc/httpd/conf/sites-available
+sites_enabled: /etc/httpd/conf/sites-enabled
 
-# this is the sha1sum of V5 of the test webapp.
-webapp_version: 351e47276cc66b018f4890a04709d4cc3d3edb0d
+lameapp_version: 1.1

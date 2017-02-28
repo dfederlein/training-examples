@@ -1,27 +1,25 @@
 ---
-# This playbook will install MariaDB and create db user and give permissions.
-
-- name: Install MariaDB package
-  yum: name={{ item }} state=installed
+- name: install mariadb package and selinux
+  yum: name={{item}} state=installed
   with_items:
-   - mariadb-server
-   - MySQL-python
-   - libselinux-python
-   - libsemanage-python
+  - mariadb-server
+  - MySQL-python
+  - libselinux-python
+  - libsemanage-python
 
-- name: Configure SELinux to start mysql on any port
+- name: configure selinux to start mariadb on any port
   seboolean: name=mysql_connect_any state=true persistent=yes
 
-- name: Create Mysql configuration file
+- name: create configuration file
   template: src=my.cnf.j2 dest=/etc/my.cnf
-  notify: 
-  - restart mariadb
-  
-- name: Create MariaDB log file
+  notify: restart mariadb
+
+- name: create mariadb log file
   file: path=/var/log/mysqld.log state=touch owner=mysql group=mysql mode=0775
-  
-- name: Start MariaDB Service
+
+- name: start mariadb service 
   service: name=mariadb state=started enabled=yes
 
-- name: insert firewalld rule
-  firewalld: port={{ mysql_port }}/tcp permanent=true state=enabled immediate=yes
+- name: insert firewalld rule for mariadb
+  firewalld: port={{mysql_port}}/tcp permanent=true state=enabled immediate=yes
+

@@ -1,0 +1,11 @@
+---
+- name: deploy an elk stack
+  hosts: elk
+  become: yes
+
+  roles:
+  - java
+  - elasticsearch
+  - kibana
+  - nginx
+  - logstash

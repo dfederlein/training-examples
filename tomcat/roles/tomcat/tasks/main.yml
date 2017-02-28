@@ -1,0 +1,27 @@
+---
+- name: install tomcat
+  yum:
+    name: "{{item}}"
+    state: present
+  with_items:
+  - tomcat
+  - tomcat-webapps
+  - tomcat-admin-webapps
+  - tomcat-docs-webapp
+  - tomcat-javadoc
+
+- name: push out tomcat configuration files
+  template:
+    src: "{{item.src}}"
+    dest: "{{item.dest}}"
+  with_items:
+  - { src: 'tomcat.conf', dest: '/usr/share/tomcat/conf/'}
+  - { src: 'server.xml', dest: '/usr/share/tomcat/conf/'}
+  - { src: 'tomcat-users.xml', dest: '/usr/share/tomcat/conf/'}
+  notify: restart tomcat
+
+- name: start tomcat
+  service:
+    name: tomcat
+    state: started
+    enabled: yes

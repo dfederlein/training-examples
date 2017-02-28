@@ -1,0 +1,10 @@
+---
+- name: deploy apache, db, and tomcat
+  hosts: tomcat-servers
+  become: yes
+
+  roles:
+  - common
+  - apache
+  - db
+  - tomcat

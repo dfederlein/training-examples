@@ -1,9 +1,3 @@
 ---
-# Handlers for HAproxy
-
 - name: restart haproxy
   service: name=haproxy state=restarted
-
-- name: reload haproxy
-  service: name=haproxy state=reloaded
-

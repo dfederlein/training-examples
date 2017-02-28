@@ -1,0 +1,4 @@
+---
+elasticURL: https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-5.2.1.rpm
+elasticCheckSum: "sha1:cc7a30ff424dc6464d48f2099461cb939ae605df"
+elasticHost: 127.0.0.1

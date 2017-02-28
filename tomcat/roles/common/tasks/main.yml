@@ -1,0 +1,13 @@
+---
+- name: install epel-release
+  yum:
+    name: epel-release
+    state: present
+
+- name: install libselinux-python
+  yum:
+    name: "{{item}}"
+    state: present
+  with_items:
+  - libselinux-python
+  - libsemanage-python

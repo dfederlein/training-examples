@@ -1,0 +1,69 @@
+---
+- name: install mariadb package and various dependencies
+  yum:
+    name: "{{item}}"
+    state: installed
+  with_items:
+  - mariadb-server
+  - MySQL-python
+  - firewalld
+
+- name: configure selinux to start mariadb on any port
+  seboolean: 
+    name: mysql_connect_any
+    state: true
+    persistent: yes
+
+- name: create mariadb configuration file 
+  template: 
+    src: my.cnf.j2
+    dest: /etc/my.cnf
+  notify: restart mariadb
+
+- name: create mariadb log file
+  file:
+    path: /var/log/mysqld.log
+    state: touch
+    owner: mysql 
+    group: mysql 
+    mode: 0775
+
+- name: create mariadb PID directory
+  file:
+    path: /var/run/mysqld
+    state: directory
+    owner: mysql 
+    group: mysql 
+    mode: 0775
+
+- name: start mariadb service
+  service:
+    name: mariadb 
+    state: started
+    enabled: yes
+
+- name: start firewalld
+  service: 
+    name: firewalld 
+    state: started
+
+- name: insert firewalld rule
+  firewalld:
+    port: "{{mysql_port}}/tcp"
+    permanent: true
+    state: enabled 
+    immediate: yes
+
+- name: create application database
+  mysql_db:
+    name: "{{dbname}}"
+    state: present 
+
+- name: create app db user
+  mysql_user:
+    name: "{{dbuser}}"
+    password: "{{upassword}}"
+    priv: "*.*:ALL"
+    host: "'%'"
+    state: present
+ 

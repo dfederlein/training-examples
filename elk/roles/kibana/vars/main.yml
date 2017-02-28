@@ -1,0 +1,4 @@
+---
+kibanaURL: https://artifacts.elastic.co/downloads/kibana/kibana-5.2.1-x86_64.rpm
+kibanaChecksum: "sha1:82dd564f979bd720e5e9d1548c9d9164100907f6"
+

@@ -1,12 +1,9 @@
 [webservers]
-web1
-web2
+10.42.0.6
 
 [dbservers]
-db1
+10.42.0.7
 
 [lbservers]
-lb1
+10.42.0.100
 
-[monitoring]
-nagios

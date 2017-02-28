@@ -1,0 +1,47 @@
+---
+- name: install nginx and dependencies
+  yum: 
+    name: "{{item}}"
+    state: present
+  with_items:
+  - libselinux-python
+  - libsemanage-python
+  - nginx
+  - python-passlib
+  - httpd-tools
+
+- name: set selinux boolean for kibana to work
+  seboolean:
+    name: httpd_can_network_connect
+    state: yes
+    persistent: yes
+
+- name: add a kibana user
+  htpasswd:
+    path: /etc/nginx/htpasswd.users
+    name: kibana
+    password: "{{kibanaPassword}}"
+
+- name: create nginx directory structure
+  file:
+    path: /etc/nginx/conf.d 
+    state: directory
+    mode: 0755
+
+- name: push out modified nginx conf file
+  template:
+    src: nginx.conf.j2
+    dest: /etc/nginx/nginx.conf
+  notify: restart nginx 
+
+- name: push out kibana configuration file
+  template: 
+    src: kibana.conf.j2
+    dest: /etc/nginx/conf.d/kibana.conf
+  notify: restart nginx
+
+- name: start nginx
+  service:
+    name: nginx
+    state: started
+    enabled: yes
